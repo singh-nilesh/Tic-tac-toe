@@ -1,44 +1,44 @@
-# This is a Terminal based Tick-tack-toe game.
+# Following is Terminal based Tik-tac-toe game
+
 import os
 
-def printGrid(matrix):
+# Display grid
+def printGrid(arr):
     os.system('cls' if os.name == 'nt' else 'clear')
-    for i,row in enumerate(matrix):
-        print(f"  {row[0]}  |  {row[1]}  |  {row[2]}")
-        if(i != len(matrix)-1):
+    for i in range(2,9,3):
+        print(f"  {arr[i-2]}  |  {arr[i-1]}  |  {arr[i]}")
+        if(i < 6):
             print("________________")
 
 
-def checkGrid(matrix):
+#Check Grid
+def checkGrid(arr):
     # check rows
-    for row in matrix:
-        if(row[0] == row[1] and row[1] == row[2] and row[2] != ' '):
-            print("\n ",row[0], " wins !!!")
+    for i in range(2,9,3):
+        if(arr[i] == arr[i-1] and arr[i-1] == arr[i-2] and arr[i] != ' '):
+            print("\n ",arr[i], " wins !!!")
             return True
     
     # check Column
     for i in range(3):
-        col_list = []
-        for j in range(3):
-            col_list.append(matrix[j][i])
-        
-        if (col_list[0] == col_list[1] and col_list[1] == col_list[2] and col_list[2] != ' '):
-            print("\n ",col_list[0], " wins !!!")
+        if(arr[i] == arr[i+3] and arr[i+3] == arr[i+6] and arr[i] != ' '):
+            print("\n ",arr[i], " wins !!!")
             return True
     
-    # check diagonals
-    if(matrix[0][0] == matrix[1][1] and matrix[1][1] == matrix[2][2] and matrix[1][1] != ' '):
-        print("\n ",matrix[0][0], " wins !!!")
+    # check diagonal 1 (init + row_len + 1)
+    if(arr[0] == arr[4] and arr[4] == arr[8] and arr[0] != ' '):
+        print("\n ",arr[0], " wins !!!")
         return True
     
-    if(matrix[0][2] == matrix[1][1] and matrix[1][1] == matrix[2][0] and matrix[1][1] != ' '):
-        print("\n ",matrix[0][2], " wins !!!")
+    # check diagonal 2 (init + row_len - 1)
+    if(arr[2] == arr[4] and arr[4] == arr[6] and arr[2] != ' '):
+        print("\n ",arr[2], " wins !!!")
         return True
     
     # Check draw    
     end = False
-    for row in matrix:
-        if (' ' not in row):
+    for val in arr:
+        if (val != ' '):
             end = True
         else:
             end = False
@@ -48,50 +48,40 @@ def checkGrid(matrix):
     return end
 
 
-# player 1 input
-def getInput_X(matrix):
+# Player Input
+def getInput(arr,plr):
+
+    try:
+        index = int(input(f"\n player( {plr} )'s move: "))
+    except ValueError:
+        print("\n Enter only numbers")
+        return getInput(arr,plr)
     
-    p1 = int(input(f"\n player( X )'s move: "))    
-    i = (p1 - p1%3)// 3
-    j = p1%3
-
-    if((p1 >= 0 and p1 <= 8) and matrix[i][j] == ' ' ):
-        matrix[i][j] = 'X'
-        return matrix
+    # fill the values
+    if((index >= 0 and index <= 8) and arr[index] == ' ' ):
+        arr[index] = plr
+        return arr
     else:
         print("\t Incorrect move")
-        return getInput_X(matrix)
-
-#player 2 input
-def getInput_O(matrix):
-
-    p1 = int(input(f"\n player( O )'s move: "))   
-    i = (p1 - p1%3)// 3
-    j = p1%3
-
-    if((p1 >= 0 and p1 <= 8) and matrix[i][j] == ' ' ):
-        matrix[i][j] = 'O'
-        return matrix
-    else:
-        print("\t Incorrect move")
-        return getInput_O(matrix)
+        return getInput(arr,plr)
 
 
 
 # main Implimentation
 end = False
-matrix = [[' ' for i in range(3)] for col in range(3) ]
+array = [i for i in range(9)]
+print(printGrid(array),"\n plese enter the index (0 to 8) \n ")
 
-print("plese enter the index (0 to 8) \n ",printGrid(matrix))
+array = [' ' for i in range(9)]
 while (end is False):
     # player 1 round
-    matrix = getInput_X(matrix)
-    printGrid(matrix)
-    end = checkGrid(matrix)
+    array = getInput(array,'X')
+    printGrid(array)
+    end = checkGrid(array)
 
     if(end):break
 
     #player 2 round
-    matrix = getInput_O(matrix)
-    printGrid(matrix)
-    end = checkGrid(matrix)
+    array = getInput(array,'O')
+    printGrid(array)
+    end = checkGrid(array)
